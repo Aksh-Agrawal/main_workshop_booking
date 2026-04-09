@@ -5,46 +5,82 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h2 class="text-center m-2">New Workshop Type</h2>
-        <br>
-        <form method="post">
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Workshop Name :</div>
-                <div class="col text-left">
-                    <div class="row"><div class="col">{{ form.name }}</div></div>
-                    <div class="row m-1 text-danger"><div class="col">{{ form.name.errors }}</div></div>
+    <div class="container fade-in">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="mb-4 d-flex align-items-center justify-content-between">
+                    <h2 class="mb-0">New Workshop Type</h2>
+                    <a href="{% url 'workshop_app:workshop_type_list' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fa fa-arrow-left mr-2"></i>Back to List
+                    </a>
                 </div>
 
-            </div>
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Duration :</div>
-                <div class="col text-left">
-                    <div class="row"><div class="col">{{ form.duration }}</div></div>
-                    <div class="row m-1 text-muted"><div class="col">{{ form.duration.help_text }}</div></div>
-                    <div class="row m-1 text-danger"><div class="col">{{ form.duration.errors }}</div></div>
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Description :</div>
-                <div class="col text-left">
-                    <div class="row"><div class="col">{{ form.description }}</div></div>
-                    <div class="row m-1 text-danger"><div class="col">{{ form.description.errors }}</div></div>
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 font-weight-bold">Terms and Conditions :</div>
-                <div class="col text-left">
-                    <div class="row"><div class="col">{{ form.terms_and_conditions }}</div></div>
-                    <div class="row m-1 text-danger"><div class="col">{{ form.terms_and_conditions.errors }}</div></div>
-                </div>
-            </div>
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4 p-md-5">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <label class="font-weight-600 text-heading">Workshop Name</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {{ form.name }}
+                                    {% if form.name.errors %}
+                                        <div class="text-danger small mt-1">{{ form.name.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
 
-            <div class="row my-3">
-                <div class="col-12">
-                    <button type="submit" class="btn btn-md btn-primary float-right m-3">Create</button>
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <label class="font-weight-600 text-heading">Duration (Days)</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {{ form.duration }}
+                                    {% if form.duration.help_text %}
+                                        <div class="text-muted small mt-1">{{ form.duration.help_text }}</div>
+                                    {% endif %}
+                                    {% if form.duration.errors %}
+                                        <div class="text-danger small mt-1">{{ form.duration.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <label class="font-weight-600 text-heading">Description</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {{ form.description }}
+                                    {% if form.description.errors %}
+                                        <div class="text-danger small mt-1">{{ form.description.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <label class="font-weight-600 text-heading">Terms & Conditions</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {{ form.terms_and_conditions }}
+                                    {% if form.terms_and_conditions.errors %}
+                                        <div class="text-danger small mt-1">{{ form.terms_and_conditions.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <hr class="my-5">
+
+                            <div class="d-flex justify-content-end">
+                                <a href="{% url 'workshop_app:workshop_type_list' %}" class="btn btn-outline-primary px-4 mr-3">Cancel</a>
+                                <button type="submit" class="btn btn-primary px-5">Create Workshop Type</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 {% endblock %}

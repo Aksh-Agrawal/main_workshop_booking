@@ -5,80 +5,110 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <table class="table table-bordered">
-            <tr>
-                <th><label for="id_first_name">Workshop Type :</label></th>
-                <td><label for="id_first_name"><a
-                        href="{% url 'workshop_app:workshop_type_details' workshop.workshop_type_id %}">{{ workshop.workshop_type }}</a></label>
-                </td>
-            </tr>
-            <tr>
-                <th><label for="id_last_name">Date :</label></th>
-                <td><label for="id_last_name">{{ workshop.date }}</label></td>
-            </tr>
-            <tr>
-                <th><label for="id_email">Coordinator :</label></th>
-                <td><label for="id_email">{{ workshop.coordinator.get_full_name|title }}</label>
-                </td>
-            </tr>
-            {% if workshop.status %}
-                <tr>
-                    <th><label for="id_institute">Status :</label></th>
-                    <td><span class="badge badge-success">{{ workshop.get_status }}</span></td>
-                </tr>
-                <tr>
-                    <th><label for="id_phone_number">Instructor :</label></th>
-                    <td><label for="id_email">{{ workshop.instructor.get_full_name|title }}</label>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <th><label for="id_institute">Status :</label></th>
-                    <td><span class="badge badge-warning">{{ workshop.get_status }}</span></td>
-                </tr>
-            {% endif %}
-        </table>
-        <br>
-        <div class="container">
-            <div class="card mt-2 mb-5">
-                <form method="post">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="mx-3 font-weight-bold">Post a comment</div>
-                            {% if request.user.profile.position == 'instructor' %}
-                                <div class="ml-5">{{ form.public }} Public</div>
-                                <div class="ml-1 text-muted">(Non-public comments are visible only to instructors)</div>
-                            {% endif %}
+    <div class="container fade-in">
+        <div class="mb-4 d-flex align-items-center justify-content-between">
+            <h2>Workshop Details</h2>
+            <a href="{% url 'workshop_app:workshop_status_instructor' %}" class="btn btn-outline-primary btn-sm">
+                <i class="fa fa-arrow-left mr-2"></i>Back to Status
+            </a>
+        </div>
+
+        <div class="card mb-5">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="text-muted small text-uppercase font-weight-bold mb-1 d-block">Workshop Type</label>
+                            <h4 class="font-weight-bold">
+                                <a href="{% url 'workshop_app:workshop_type_details' workshop.workshop_type_id %}">{{ workshop.workshop_type }}</a>
+                            </h4>
+                        </div>
+                        <div class="mb-4">
+                            <label class="text-muted small text-uppercase font-weight-bold mb-1 d-block">Scheduled Date</label>
+                            <div class="d-flex align-items-center">
+                                <span class="material-icons mr-2 text-primary">event</span>
+                                <span class="h5 mb-0">{{ workshop.date|date:"F d, Y" }}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        {{ form.comment }}
-                    </div>
-                    <button type="submit" class="float-right btn btn-primary btn-md m-2">Post</button>
-                </form>
-            </div>
-            <br><br>
-            <h2 class="text-center">Comments</h2>
-            <br>
-            {% for comment in workshop_comments %}
-                <div class="card my-2">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="ml-3 font-weight-bold"><a
-                                    href="{% url 'workshop_app:view_profile' comment.author_id %}">{{ comment.author }}</a></div>
-                            {% if not comment.public %}
-                                <div class="ml-1"><span class="badge badge-dark">Hidden</span></div>
-                            {% endif %}
-                            <div class="ml-3 text-muted">{{ comment.created_date }}</div>
+                    <div class="col-md-6 border-left">
+                        <div class="mb-4">
+                            <label class="text-muted small text-uppercase font-weight-bold mb-1 d-block">Coordinator</label>
+                            <div class="h5">{{ workshop.coordinator.get_full_name|title }}</div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <p>{{ comment.comment }}</p>
+                        <div class="mb-0">
+                            <label class="text-muted small text-uppercase font-weight-bold mb-1 d-block">Status</label>
+                            <div class="d-flex align-items-center">
+                                {% if workshop.status %}
+                                    <span class="badge badge-success py-2 px-3 mr-3">{{ workshop.get_status }}</span>
+                                    <span class="text-muted small">Assigned to: <strong>{{ workshop.instructor.get_full_name|title }}</strong></span>
+                                {% else %}
+                                    <span class="badge badge-warning py-2 px-3">{{ workshop.get_status }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card mb-5 border-primary shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 font-weight-bold">Post a Comment</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group mb-3">
+                                {{ form.comment }}
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="custom-control custom-switch">
+                                    {% if request.user.profile.position == 'instructor' %}
+                                        <div class="d-flex align-items-center">
+                                            {{ form.public }} <span class="ml-2 font-weight-500">Make Public</span>
+                                            <i class="fa fa-info-circle ml-2 text-muted" title="Non-public comments are visible only to instructors"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <button type="submit" class="btn btn-primary px-5">Post Comment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <h3 class="mb-4">Discussion</h3>
+                
+                {% for comment in workshop_comments %}
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light rounded-circle p-2 mr-3">
+                                        <span class="material-icons text-muted">person</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-weight-bold mb-0">
+                                            <a href="{% url 'workshop_app:view_profile' comment.author_id %}">{{ comment.author }}</a>
+                                            {% if not comment.public %}
+                                                <span class="badge badge-dark ml-2">Private</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-muted small">{{ comment.created_date|timesince }} ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="mb-0 text-main" style="line-height: 1.6;">{{ comment.comment }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="text-center py-5 bg-light rounded-lg">
+                        <p class="text-muted mb-0">No comments yet. Be the first to start the discussion!</p>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
-
 {% endblock %}

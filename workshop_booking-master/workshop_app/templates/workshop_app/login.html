@@ -5,10 +5,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="container fade-in">
         <div class="row justify-content-center">
-            <div class="col-md-6 col-md-offset-6">
-                <div class="card">
+            <div class="col-md-5 col-md-offset-6">
+                <h2 class="text-center mb-5 font-weight-800 text-gradient">Welcome Back</h2>
+                <div class="card shadow-lg border-0">
                     <div class="card-body">
                         <form class="px-3 py-3" method="post">
                         {% csrf_token %}
