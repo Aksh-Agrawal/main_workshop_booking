@@ -1,54 +1,439 @@
 {% extends 'workshop_app/base.html' %}
+{% load static %}
 
-{% block title %}
-    Login
+{% block title %}Login – FOSSEE Workshops{% endblock %}
+
+{% block extra-custom-scripts %}
+<style>
+  /* ── Full-Screen Login Override ── */
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .base-content {
+    padding: 0 !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Cinematic Background ── */
+  .login-bg {
+    position: fixed;
+    inset: 0;
+    background: url("{% static 'workshop_app/img/login_bg.png' %}") center / cover no-repeat;
+    z-index: -2;
+  }
+
+  /* Dark overlay so glass pops */
+  .login-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(5, 20, 15, 0.65) 0%,
+      rgba(10, 30, 25, 0.55) 50%,
+      rgba(5, 15, 20, 0.70) 100%
+    );
+  }
+
+  /* ── Floating Colour Orbs ── */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    z-index: -1;
+    animation: orbFloat 12s ease-in-out infinite alternate;
+  }
+  .orb-1 {
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, #00c6a7, #007a5b);
+    top: -160px; left: -120px;
+    animation-duration: 14s;
+  }
+  .orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #7b5ea7, #3d2973);
+    bottom: -140px; right: -80px;
+    animation-duration: 18s;
+    animation-delay: -5s;
+  }
+  .orb-3 {
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, #e8a045, #c0612a);
+    top: 50%; left: 65%;
+    animation-duration: 22s;
+    animation-delay: -9s;
+    opacity: 0.2;
+  }
+
+  @keyframes orbFloat {
+    0%   { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(60px, 40px) scale(1.12); }
+  }
+
+  /* ── Glass Card ── */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+    padding: 2.8rem 2.6rem 2.4rem;
+    width: 100%;
+    max-width: 420px;
+    animation: floatIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Top shimmer line */
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0,198,167,0.8), rgba(123,94,167,0.8), transparent);
+    border-radius: 24px 24px 0 0;
+  }
+
+  @keyframes floatIn {
+    0%   { opacity: 0; transform: translateY(36px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* ── Logo / Brand Icon ── */
+  .glass-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00c6a7, #7b5ea7);
+    margin: 0 auto 1.4rem;
+    box-shadow: 0 0 30px rgba(0,198,167,0.5);
+    font-size: 1.8rem;
+  }
+
+  /* ── Typography ── */
+  .glass-title {
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.85rem;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.3rem;
+  }
+
+  .glass-subtitle {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.88rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ── Labels ── */
+  .glass-label {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+    font-family: 'Inter', sans-serif;
+    display: block;
+  }
+
+  /* ── Inputs ── */
+  .glass-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    padding: 0.82rem 1.1rem !important;
+    font-size: 0.95rem !important;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+    outline: none;
+  }
+
+  .glass-input::placeholder {
+    color: rgba(255,255,255,0.35) !important;
+  }
+
+  .glass-input:focus {
+    background: rgba(255, 255, 255, 0.14) !important;
+    border-color: rgba(0, 198, 167, 0.6) !important;
+    box-shadow: 0 0 0 3px rgba(0,198,167,0.2), inset 0 2px 6px rgba(0,0,0,0.2) !important;
+    color: #fff !important;
+  }
+
+  /* Force Django form widgets to inherit styles */
+  .glass-input-wrapper input {
+    composes: glass-input;
+  }
+
+  /* ── Submit Button ── */
+  .btn-glass-submit {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #00c6a7 0%, #7b5ea7 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 24px rgba(0,198,167,0.35);
+    margin-top: 1.4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-glass-submit::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -60%;
+    width: 220%; height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.12), transparent);
+    transform: rotate(45deg);
+    transition: 0.6s;
+  }
+
+  .btn-glass-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0,198,167,0.5);
+  }
+
+  .btn-glass-submit:hover::after {
+    left: 120%;
+  }
+
+  /* ── Divider ── */
+  .glass-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 1.6rem 0 1.2rem;
+  }
+  .glass-divider::before,
+  .glass-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+  }
+  .glass-divider span {
+    color: rgba(255,255,255,0.35);
+    font-size: 0.78rem;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+  }
+
+  /* ── Social Icons Row ── */
+  .social-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.6rem;
+  }
+  .social-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .social-btn:hover {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    text-decoration: none;
+  }
+
+  /* ── Footer Links ── */
+  .glass-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.4rem;
+    margin-top: 0.4rem;
+  }
+  .glass-links a {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.82rem;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .glass-links a:hover {
+    color: rgba(0,198,167,0.9);
+    text-decoration: none;
+  }
+
+  /* ── Error Alert ── */
+  .glass-alert {
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.35);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    color: #fca5a5;
+    font-size: 0.85rem;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* ── Hide default navbar/footer on login ── */
+  .navbar, footer.footer { display: none !important; }
+
+  /* ── Form group spacing ── */
+  .glass-form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  /* Force Django form widget styling */
+  #login-form input[type="text"],
+  #login-form input[type="password"],
+  #login-form input[type="email"] {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    padding: 0.82rem 1.1rem !important;
+    font-size: 0.95rem !important;
+    font-family: 'Inter', sans-serif !important;
+    transition: all 0.3s ease !important;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.2) !important;
+    outline: none !important;
+    display: block !important;
+  }
+
+  #login-form input[type="text"]::placeholder,
+  #login-form input[type="password"]::placeholder {
+    color: rgba(255,255,255,0.35) !important;
+  }
+
+  #login-form input[type="text"]:focus,
+  #login-form input[type="password"]:focus,
+  #login-form input[type="email"]:focus {
+    background: rgba(255, 255, 255, 0.14) !important;
+    border-color: rgba(0, 198, 167, 0.6) !important;
+    box-shadow: 0 0 0 3px rgba(0,198,167,0.2), inset 0 2px 6px rgba(0,0,0,0.2) !important;
+    color: #fff !important;
+  }
+</style>
 {% endblock %}
 
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
 {% block content %}
-    <div class="container fade-in">
-        <div class="row justify-content-center">
-            <div class="col-md-5 col-md-offset-6">
-                <h2 class="text-center mb-5 font-weight-800 text-gradient">Welcome Back</h2>
-                <div class="card shadow-lg border-0">
-                    <div class="card-body">
-                        <form class="px-3 py-3" method="post">
-                        {% csrf_token %}
-                        {% if form.errors %}
-                            {% for field in form %}
-                                {% for error in field.errors %}
-                                    <div class="alert alert-dismissible alert-danger">
-                                        <button type="button" class="close" data-dismiss="alert">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <strong>{{ error|escape }}</strong>
-                                    </div>
-                                {% endfor %}
-                            {% endfor %}
-                            {% for error in form.non_field_errors %}
-                                <div class="alert alert-dismissible alert-danger">
-                                    <button type="button" class="close" data-dismiss="alert">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <strong>{{ error|escape }}</strong>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                        <div class="form-group">
-                          <label for="id_username">Username</label>
-                          {{ form.username }}
-                        </div>
-                        <div class="form-group">
-                          <label for="id_password">Password</label>
-                          {{ form.password }}
-                        </div>
-                        <button type="submit" class="btn btn-primary">Sign in</button>
-                        </form>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'workshop_app:register' %}">New around here? Sign up</a>
-                        <a class="dropdown-item" href="{% url 'password_reset' %}">Forgot password?</a>
-                    </div>
-                </div>  
-            </div>
+<!-- Cinematic Background -->
+<div class="login-bg"></div>
+
+<!-- Floating Orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- Glass Card -->
+<div class="glass-card">
+
+  <!-- Logo -->
+  <div class="glass-logo">🎓</div>
+
+  <!-- Title -->
+  <h1 class="glass-title">Login Here</h1>
+  <p class="glass-subtitle">Welcome back to FOSSEE Workshops</p>
+
+  <!-- Error Messages -->
+  {% if form.errors %}
+    {% for field in form %}
+      {% for error in field.errors %}
+        <div class="glass-alert">
+          <span>⚠</span> {{ error|escape }}
         </div>
+      {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+      <div class="glass-alert">
+        <span>⚠</span> {{ error|escape }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Login Form -->
+  <form id="login-form" method="post">
+    {% csrf_token %}
+
+    <div class="glass-form-group">
+      <label class="glass-label" for="id_username">Username</label>
+      {{ form.username }}
     </div>
+
+    <div class="glass-form-group">
+      <label class="glass-label" for="id_password">Password</label>
+      {{ form.password }}
+    </div>
+
+    <button type="submit" class="btn-glass-submit">Log In</button>
+  </form>
+
+  <!-- Social Divider -->
+  <div class="glass-divider"><span>or continue with</span></div>
+
+  <!-- Decorative Social Icons -->
+  <div class="social-row">
+    <span class="social-btn" title="Facebook">
+      <i class="fa fa-facebook"></i>
+    </span>
+    <span class="social-btn" title="Twitter/X">
+      <i class="fa fa-twitter"></i>
+    </span>
+    <span class="social-btn" title="Instagram">
+      <i class="fa fa-instagram"></i>
+    </span>
+  </div>
+
+  <!-- Footer Links -->
+  <div class="glass-links">
+    <a href="{% url 'workshop_app:register' %}">New here? Sign up</a>
+    <a href="{% url 'password_reset' %}">Forgot password?</a>
+  </div>
+
+</div>
+
+<script>
+  // Add placeholder text to Django form inputs
+  document.addEventListener('DOMContentLoaded', function() {
+    var usernameInput = document.getElementById('id_username');
+    var passwordInput = document.getElementById('id_password');
+    if (usernameInput) usernameInput.setAttribute('placeholder', 'Enter your username');
+    if (passwordInput) passwordInput.setAttribute('placeholder', 'Enter your password');
+  });
+</script>
 {% endblock %}

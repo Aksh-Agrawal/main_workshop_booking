@@ -1,4 +1,4 @@
-git afrom django.contrib import messages
+from django.contrib import messages
 from django.db.models import Q
 from django.forms import inlineformset_factory, model_to_dict
 from django.http import JsonResponse, Http404
@@ -136,22 +136,32 @@ def activate_user(request, key=None):
 
 def user_register(request):
     """User Registration form"""
+    from django.conf import settings
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             username, password, key = form.save()
             new_user = authenticate(username=username, password=password)
             login(request, new_user)
+            # Auto-verify email in DEBUG mode so local signups work end-to-end
+            if settings.DEBUG:
+                profile = new_user.profile
+                profile.is_email_verified = True
+                profile.save()
+                return redirect(get_landing_page(new_user))
             user_position = request.user.profile.position
-            send_email(
-                request, call_on='Registration',
-                user_position=user_position,
-                key=key
-            )
+            try:
+                send_email(
+                    request, call_on='Registration',
+                    user_position=user_position,
+                    key=key
+                )
+            except Exception:
+                pass  # Don't crash if email fails in local dev
             return render(request, 'workshop_app/activation.html')
         else:
             if request.user.is_authenticated:
-                return redirect('workshop:view_profile')
+                return redirect(reverse('workshop_app:view_own_profile'))
             return render(
                 request, "workshop_app/register.html",
                 {"form": form}
