@@ -29,6 +29,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'workshop_app/css/base.css' %}" type="text/css"/>
     <link rel="stylesheet" href="{% static 'workshop_app/css/font-awesome.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'workshop_app/css/limelight-nav.css' %}" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
 
     {% block extra-custom-scripts %}
@@ -60,60 +61,7 @@
                         Home
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'statistics_app:public' %}">
-                        Workshop Statistics
-                    </a>
-                </li>
             </ul>
-            {% if user.is_authenticated %}
-            <ul class="navbar-nav mr-auto">
-                {% if request.user|has_group:"instructor" %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'statistics_app:team' %}">
-                        Team Statistics
-                    </a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'workshop_app:workshop_status_instructor' %}">
-                        Workshop Status
-                    </a>
-                </li>
-                {% if not request.user|has_group:"instructor" %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'workshop_app:propose_workshop' %}">
-                            Propose Workshop
-                        </a>
-                    </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'workshop_app:workshop_type_list' %}">
-                        Workshop Types
-                    </a>
-                </li>
-            </ul>
-            <div class="my-2 my-lg-0">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           <span class="material-icons" style="vertical-align: middle">account_circle</span>
-                            <p style="display: inline; vertical-align: middle">
-                                {{user.get_full_name|title}}
-                            </p>
-                        </a>
-                        <div class="dropdown-menu shadow-sm" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'workshop_app:view_own_profile' %}">Profile</a>
-                            <a class="dropdown-item" href="{% url 'password_change' %}">
-                                 Change Password
-                            </a>
-                            <a class="dropdown-item" href="{% url 'workshop_app:logout' %}">Logout</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            {% endif %}
         </div>
     </nav>
 {% endblock %}
@@ -124,6 +72,39 @@
     {% endblock %}
 </div>
 
+{% if user.is_authenticated %}
+<div class="limelight-nav-wrapper">
+    <nav class="limelight-nav">
+        <a href="/" class="limelight-item {% if request.path == '/' %}active{% endif %}" aria-label="Home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
+            <span class="limelight-item-label">Home</span>
+        </a>
+        
+        <a href="{% if request.user|has_group:'instructor' %}{% url 'workshop_app:workshop_status_instructor' %}{% else %}{% url 'workshop_app:workshop_status_coordinator' %}{% endif %}" class="limelight-item {% if 'status' in request.path or 'dashboard' in request.path %}active{% endif %}" aria-label="Status">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z" /></svg>
+            <span class="limelight-item-label">Workshops</span>
+        </a>
+
+        {% if not request.user|has_group:"instructor" %}
+        <a href="{% url 'workshop_app:propose_workshop' %}" class="limelight-item {% if 'propose' in request.path %}active{% endif %}" aria-label="Propose">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+            <span class="limelight-item-label">Propose</span>
+        </a>
+        {% endif %}
+
+        <a href="{% url 'workshop_app:view_own_profile' %}" class="limelight-item {% if 'profile' in request.path %}active{% endif %}" aria-label="Profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+            <span class="limelight-item-label">Profile</span>
+        </a>
+
+        <div class="limelight-indicator">
+            <div class="limelight-beam"></div>
+        </div>
+    </nav>
+</div>
+{% endif %}
+
+<script src="{% static 'workshop_app/js/limelight-nav.js' %}"></script>
 <script>
     {% if messages %}
         {% for message in messages %}

@@ -367,23 +367,14 @@
   <div class="glass-logo">🎓</div>
 
   <!-- Title -->
-  <h1 class="glass-title">Login Here</h1>
-  <p class="glass-subtitle">Welcome back to FOSSEE Workshops</p>
+  <h1 class="glass-title">Hey, Learner! 👋</h1>
+  <p class="glass-subtitle">Ready to dive back in? We missed you 🚀</p>
 
   <!-- Error Messages -->
   {% if form.errors %}
-    {% for field in form %}
-      {% for error in field.errors %}
-        <div class="glass-alert">
-          <span>⚠</span> {{ error|escape }}
-        </div>
-      {% endfor %}
-    {% endfor %}
-    {% for error in form.non_field_errors %}
-      <div class="glass-alert">
-        <span>⚠</span> {{ error|escape }}
-      </div>
-    {% endfor %}
+    <div class="glass-alert">
+      <span>🤔</span>&nbsp; Hmm… that doesn't look right. Double-check your username and secret key!
+    </div>
   {% endif %}
 
   <!-- Login Form -->
@@ -400,7 +391,7 @@
       {{ form.password }}
     </div>
 
-    <button type="submit" class="btn-glass-submit">Log In</button>
+    <button type="submit" class="btn-glass-submit">Let me in 🚀</button>
   </form>
 
   <!-- Social Divider -->
@@ -432,8 +423,8 @@
   document.addEventListener('DOMContentLoaded', function() {
     var usernameInput = document.getElementById('id_username');
     var passwordInput = document.getElementById('id_password');
-    if (usernameInput) usernameInput.setAttribute('placeholder', 'Enter your username');
-    if (passwordInput) passwordInput.setAttribute('placeholder', 'Enter your password');
+    if (usernameInput) usernameInput.setAttribute('placeholder', "What's your name, learner? 🧠");
+    if (passwordInput) passwordInput.setAttribute('placeholder', 'Enter your secret key 🔐');
   });
 </script>
 {% endblock %}
