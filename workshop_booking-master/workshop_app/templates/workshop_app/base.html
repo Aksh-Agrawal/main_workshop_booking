@@ -87,7 +87,7 @@
     {% endblock %}
 </div>
 
-{% if user.is_authenticated %}
+{% if 'login' not in request.path and 'reset' not in request.path %}
 <div class="limelight-nav-wrapper">
     <nav class="limelight-nav">
         <a href="/" class="limelight-item {% if request.path == '/' %}active{% endif %}" aria-label="Home">
@@ -100,6 +100,7 @@
             <span class="limelight-item-label">Statistics</span>
         </a>
 
+        {% if user.is_authenticated %}
         <a href="{% if request.user|has_group:'instructor' %}{% url 'workshop_app:workshop_status_instructor' %}{% else %}{% url 'workshop_app:workshop_status_coordinator' %}{% endif %}" class="limelight-item {% if 'status' in request.path or 'dashboard' in request.path %}active{% endif %}" aria-label="Status">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z" /></svg>
             <span class="limelight-item-label">Workshops</span>
@@ -121,6 +122,12 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
             <span class="limelight-item-label">Profile</span>
         </a>
+
+        <button onclick="window.history.back()" class="limelight-item" aria-label="Back" style="background: none; border: none; cursor: pointer; padding: 0; color: inherit;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span class="limelight-item-label">Back</span>
+        </button>
+        {% endif %}
 
         <div class="limelight-indicator">
             <div class="limelight-beam"></div>
