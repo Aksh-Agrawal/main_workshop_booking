@@ -102,7 +102,6 @@
 }
 .btn-g:hover { background:rgba(255,255,255,0.13); transform:translateY(-3px); }
 
-/* Tables */
 .sc { max-width:960px; margin:52px auto; }
 .sg {
     background:rgba(255,255,255,0.03);
@@ -151,28 +150,8 @@
     font-size:0.73rem; padding:4px 12px; border-radius:50px;
 }
 
-/* Glassmorphism for Background Effect */
-.sg, .sc {
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(16px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
 
-/* ──────────────────────────────────────────────────── */
-/* MOBILE RESPONSIVE BACKGROUND TEXT STYLES */
-/* ──────────────────────────────────────────────────── */
 
-/* Desktop Default Styles (Base) */
-.welcome-banner-wrap {
-    font-size: 1rem;
-}
-
-.gear-banner-text {
-    font-size: 1rem;
-}
-
-/* Ultra-Small Devices (< 320px) */
 @media (max-width: 320px) {
     .welcome-banner-wrap {
         padding: 0.5rem 0.5rem !important;
@@ -214,7 +193,6 @@
     }
 }
 
-/* Small Phones (321px - 380px) */
 @media (min-width: 321px) and (max-width: 380px) {
     .welcome-banner-wrap {
         padding: 0.75rem 0.75rem !important;
@@ -253,7 +231,6 @@
     }
 }
 
-/* Mobile Phones (381px - 576px) */
 @media (min-width: 381px) and (max-width: 576px) {
     .welcome-banner-wrap {
         padding: 1rem 0.75rem !important;
@@ -303,17 +280,14 @@
         gap: 10px;
     }
     
-    /* Welcome message header on empty state */
     [style*="padding-top: 80px"] {
         padding-top: 1rem !important;
     }
     
-    /* Override inline font-size styles */
     [style*="font-size: 1.1rem"] {
         font-size: clamp(0.9rem, 4.5vw, 1.05rem) !important;
     }
     
-    /* Buttons */
     .btn-p {
         box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
     }
@@ -322,7 +296,6 @@
         transform: translateY(-2px);
     }
     
-    /* Tables */
     .sc {
         max-width: 100% !important;
         margin: 2rem auto 1rem !important;
@@ -340,7 +313,6 @@
         margin-bottom: 1rem;
     }
     
-    /* Table Responsive */
     .table thead th {
         padding: 0.75rem 0.5rem !important;
         font-size: 0.65rem !important;
@@ -367,7 +339,6 @@
     }
 }
 
-/* Tablet Portrait (577px - 768px) */
 @media (min-width: 577px) and (max-width: 768px) {
     .welcome-banner-wrap {
         padding: 1.5rem 1rem !important;
@@ -410,7 +381,6 @@
         min-height: 44px !important;
     }
     
-    /* Override inline styles on tablet */
     [style*="font-size: 1.1rem"] {
         font-size: clamp(0.95rem, 4vw, 1.1rem) !important;
     }
@@ -440,7 +410,6 @@
     }
 }
 
-/* Tablet Landscape (769px - 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
     .welcome-banner-wrap {
         padding: 2rem 1rem !important;
@@ -476,7 +445,6 @@
     }
 }
 
-/* Desktop (1025px+) */
 @media (min-width: 1025px) {
     .gear-banner-title {
         font-size: 3.2rem !important;
@@ -498,7 +466,6 @@
     }
 }
 
-/* Landscape Mode (All Heights) - Reduce vertical spacing */
 @media (max-height: 500px) and (orientation: landscape) {
     .welcome-banner-wrap {
         min-height: auto !important;

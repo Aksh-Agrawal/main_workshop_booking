@@ -23,7 +23,7 @@
   .login-bg {
     position: fixed;
     inset: 0;
-    background: url("{% static 'workshop_app/img/login_bg.png' %}") center / cover no-repeat;
+    background: url("{% static 'workshop_app/img/login_bg_desert.png' %}") center / cover no-repeat;
     z-index: -2;
   }
 
@@ -39,14 +39,6 @@
     );
   }
 
-  /* Aurora particle canvas takes care of the background */
-  #react-banner-aurora {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-  }
 
   .glass-card {
     background: rgba(255, 255, 255, 0.09);
@@ -377,7 +369,6 @@
 {% block content %}
 
 <div class="login-bg"></div>
-<div id="react-banner-aurora"></div>
 
 <div class="glass-card">
 
